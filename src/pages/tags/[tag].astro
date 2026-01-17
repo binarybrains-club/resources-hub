@@ -1,0 +1,81 @@
+---
+import { getCollection } from 'astro:content';
+
+export async function getStaticPaths() {
+  const allResources = await getCollection('resources');
+  const allTags = [...new Set(allResources.flatMap(resource => resource.data.tags))];
+  
+  return allTags.map(tag => ({
+    params: { tag },
+    props: { 
+      allResources,
+      tag,
+      filteredResources: allResources.filter(resource => 
+        resource.data.tags.includes(tag)
+      ),
+      sortedResources: allResources.filter(resource => 
+        resource.data.tags.includes(tag)
+      ).sort((a, b) => 
+        new Date(b.data.addedDate).getTime() - new Date(a.data.addedDate).getTime()
+      )
+    }
+  }));
+}
+
+const { allResources, tag, filteredResources, sortedResources } = Astro.props;
+---
+
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta name="viewport" content="width=device-width" />
+		<meta name="generator" content={Astro.generator} />
+		<title>Resources tagged: {tag}</title>
+	</head>
+	<body>
+		<nav>
+			<a href="/">← Back to all resources</a>
+		</nav>
+		
+		<h1>Resources tagged: {tag}</h1>
+		<p>Found {sortedResources.length} resources</p>
+		
+		{sortedResources.length === 0 ? (
+			<p>No resources found with this tag.</p>
+		) : (
+			<div>
+				{sortedResources.map((resource) => (
+					<div>
+						<h3>
+							<a href={resource.data.url} target="_blank" rel="noopener noreferrer">
+								{resource.data.title || resource.data.extractedTitle || resource.data.url}
+							</a>
+						</h3>
+						{(resource.data.thumbnail || resource.data.extractedThumbnail) && (
+							<img 
+								src={resource.data.thumbnail || resource.data.extractedThumbnail} 
+								alt="" 
+								width="200"
+							/>
+						)}
+						{resource.data.contributors.length > 0 && (
+							<p>Contributors: {resource.data.contributors.join(', ')}</p>
+						)}
+						{resource.data.tags.length > 0 && (
+							<p>Tags: {resource.data.tags.map(t => 
+								`<a href="/tags/${t}">${t}</a>`
+							).join(', ')}</p>
+						)}
+						<p>Added: {resource.data.addedDate.toLocaleDateString()}</p>
+						{resource.body && (
+							<div>
+								<p>{resource.body.slice(0, 200)}...</p>
+							</div>
+						)}
+					</div>
+				))}
+			</div>
+		)}
+	</body>
+</html>
