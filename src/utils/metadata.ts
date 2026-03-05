@@ -1,3 +1,8 @@
+/**
+ * Extracts metadata (title and thumbnail) from a given URL by fetching and parsing its HTML.
+ * @param url - The URL to extract metadata from
+ * @returns Promise resolving to an object containing optional title and thumbnail
+ */
 export async function extractMetadata(url: string): Promise<{
   title?: string;
   thumbnail?: string;
@@ -24,6 +29,12 @@ export async function extractMetadata(url: string): Promise<{
   }
 }
 
+/**
+ * Extracts the title from HTML content.
+ * Checks in order: <title> tag, og:title meta property, twitter:title meta name.
+ * @param html - The HTML string to parse
+ * @returns The extracted title or undefined if not found
+ */
 function extractTitle(html: string): string | undefined {
   const titleMatch = html.match(/<title[^>]*>([^<]+)<\/title>/i);
   if (titleMatch) {
@@ -43,6 +54,12 @@ function extractTitle(html: string): string | undefined {
   return undefined;
 }
 
+/**
+ * Extracts the thumbnail/image URL from HTML content.
+ * Checks in order: og:image meta property, twitter:image meta name, favicon link.
+ * @param html - The HTML string to parse
+ * @returns The extracted thumbnail URL or undefined if not found
+ */
 function extractThumbnail(html: string): string | undefined {
   const ogImageMatch = html.match(/<meta[^>]*property=["']og:image["'][^>]*content=["']([^"']+)["']/i);
   if (ogImageMatch) {

@@ -1,5 +1,10 @@
 import { extractMetadata } from '../../utils/metadata';
 
+/**
+ * API endpoint for extracting metadata from a URL.
+ * Accepts POST request with a URL and returns extracted title and thumbnail.
+ * @returns JSON response with metadata or error message
+ */
 export async function POST({ request }: { request: Request }) {
   try {
     const { url } = await request.json();

@@ -7,15 +7,14 @@ const sortedResources = allResources.sort((a, b) =>
 );
 
 // Get all unique tags for filtering
-const allTags = [...new Set(allResources.flatMap(resource => resource.data.tags))].sort();
+const allTags = [...new Set(allResources.flatMap(resource => resource.data.tags ?? []))].sort();
 ---
 
 <html lang="en">
-	<head>
+	<head
 		<meta charset="utf-8" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<meta name="viewport" content="width=device-width" />
-<meta name="generator" content={Astro.generator} />
 		<title>Resource Hub</title>
 	</head>
 	<body>
@@ -58,7 +57,7 @@ const allTags = [...new Set(allResources.flatMap(resource => resource.data.tags)
 				<div id="resourcesList">
 {sortedResources.map((resource) => {
 						const title = (resource.data.title || resource.data.extractedTitle || resource.data.url).toLowerCase();
-						const tags = resource.data.tags.join(',').toLowerCase();
+						const tags = (resource.data.tags ?? []).join(',').toLowerCase();
 						return (
 						<div data-title={title} data-tags={tags} style="border: 1px solid #ccc; padding: 10px; margin-bottom: 10px;">
 							<h3>
@@ -73,7 +72,7 @@ const allTags = [...new Set(allResources.flatMap(resource => resource.data.tags)
 									width="200"
 								/>
 							)}
-							{resource.data.contributors.length > 0 && (
+						{Array.isArray(resource.data.contributors) && resource.data.contributors.length > 0 && (
 								<p>Contributors: {resource.data.contributors.map(contributor => (
 									<a href={`https://github.com/${contributor}`} target="_blank" rel="noopener noreferrer">
 										<img src={`https://github.com/${contributor}.png`} alt={contributor} width="20" height="20" style="border-radius: 50%; margin-right: 4px;">
@@ -81,12 +80,12 @@ const allTags = [...new Set(allResources.flatMap(resource => resource.data.tags)
 									</a>
 								))}</p>
 							)}
-							{resource.data.tags.length > 0 && (
+						{Array.isArray(resource.data.tags) && resource.data.tags.length > 0 && (
 								<p>Tags: {resource.data.tags.map(tag => (
 									<a href={`/tags/${tag}`}>{tag}</a>
 								))}</p>
 							)}
-							<p>Added: {resource.data.addedDate.toLocaleDateString()}</p>
+						<p>Added: {resource.data.addedDate ? new Date(resource.data.addedDate).toLocaleDateString() : 'Unknown date'}</p>
 							{resource.body && (
 								<div>
 									<p>{resource.body.slice(0, 200)}...</p>
