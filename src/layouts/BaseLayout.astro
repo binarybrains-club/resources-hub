@@ -2,6 +2,10 @@
 interface Props {
   title: string;
 }
+
+const { title } = Astro.props;
+
+const fullTitle = title.endsWith(" | Binary Brains") ? title : `${title} | Binary Brains`;
 ---
 
 <html lang="es">
@@ -9,7 +13,7 @@ interface Props {
     <meta charset="utf-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width" />
-    <title>Resource Hub</title>
+    <title>{fullTitle}</title>
   </head>
   <body>
     <slot />
