@@ -1,4 +1,5 @@
 import { defineCollection } from "astro:content";
+import { glob } from "astro/loaders";
 import { z } from "astro/zod";
 
 /**
@@ -6,13 +7,13 @@ import { z } from "astro/zod";
  * Contains URL, thumbnail, contributors, dates, and tags.
  */
 const resources = defineCollection({
-  type: "content",
+  loader: glob({ base: "./src/content/resources", pattern: "**/*.{md,mdx}" }),
   schema: z.object({
     title: z.string().optional(),
     url: z.url(),
     thumbnail: z.url().optional(),
     contributors: z.array(z.string()).default([]),
-    addedDate: z.date().default(new Date()),
+    addedDate: z.date(),
     tags: z.array(z.string()).default([]),
     extractedTitle: z.string().optional(),
     extractedThumbnail: z.url().optional(),
