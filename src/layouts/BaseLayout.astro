@@ -5,7 +5,9 @@ interface Props {
 
 const { title } = Astro.props;
 
-const fullTitle = title.endsWith(" | Binary Brains") ? title : `${title} | Binary Brains`;
+const fullTitle = title.endsWith(" | Binary Brains")
+  ? title
+  : `${title} | Binary Brains`;
 ---
 
 <html lang="es">
