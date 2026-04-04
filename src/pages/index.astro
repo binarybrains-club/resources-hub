@@ -1,8 +1,11 @@
 ---
-import { getCollection, type CollectionEntry } from "astro:content";
+import { type CollectionEntry, getCollection } from "astro:content";
 import BaseLayout from "@/layouts/BaseLayout.astro";
 
-const allResources: CollectionEntry<"resources">[] = await getCollection("resources");
+const allResources: CollectionEntry<"resources">[] = await getCollection(
+  "resources",
+);
+
 const sortedResources = allResources.sort(
   (a, b) =>
     new Date(b.data.addedDate).getTime() -
@@ -11,7 +14,7 @@ const sortedResources = allResources.sort(
 
 const allTags = [
   ...new Set(allResources.flatMap((resource) => resource.data.tags ?? [])),
-].sort();
+].toSorted();
 ---
 <BaseLayout title="Resource Hub">
   <h1>Resource Hub</h1>
