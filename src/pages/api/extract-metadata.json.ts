@@ -1,4 +1,4 @@
-import { extractMetadata } from "../../utils/metadata";
+import { extractMetadata } from "@/utils/metadata.ts";
 
 /**
  * API endpoint for extracting metadata from a URL.
@@ -21,7 +21,7 @@ export async function POST({ request }: { request: Request }) {
     return new Response(JSON.stringify(metadata), {
       headers: { "Content-Type": "application/json" },
     });
-  } catch (error) {
+  } catch (_error) {
     return new Response(
       JSON.stringify({ error: "Failed to extract metadata" }),
       {

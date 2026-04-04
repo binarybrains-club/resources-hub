@@ -1,211 +1,259 @@
 ---
-import { getCollection } from 'astro:content';
+import { getCollection } from "astro:content";
+import BaseLayout from "@/layouts/BaseLayout.astro";
 
-const allResources = await getCollection('resources');
-const sortedResources = allResources.sort((a, b) => 
-  new Date(b.data.addedDate).getTime() - new Date(a.data.addedDate).getTime()
+const allResources = await getCollection("resources");
+const sortedResources = allResources.sort(
+  (a, b) =>
+    new Date(b.data.addedDate).getTime() -
+    new Date(a.data.addedDate).getTime(),
 );
 
 // Get all unique tags for filtering
-const allTags = [...new Set(allResources.flatMap(resource => resource.data.tags ?? []))].sort();
+const allTags = [
+  ...new Set(allResources.flatMap((resource) => resource.data.tags ?? [])),
+].sort();
 ---
 
-<html lang="en">
-	<head
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="viewport" content="width=device-width" />
-		<title>Resource Hub</title>
-	</head>
-	<body>
-		<h1>Resource Hub</h1>
-		<p>Learning resources shared by the community</p>
-		
-		<div>
-			<label for="searchInput">Search by title:</label><br>
-			<input 
-				type="text" 
-				id="searchInput" 
-				placeholder="Type to search resources..."
-				style="width: 300px; margin-bottom: 10px;"
-			/><br><br>
-			
-			<label for="tagsSelect">Filter by tags (hold Ctrl/Cmd to select multiple):</label><br>
-			<select 
-				id="tagsSelect" 
-				multiple 
-				style="width: 300px; height: 100px;"
-			>
-				{allTags.map(tag => (
-					<option value={tag}>{tag}</option>
-				))}
-			</select><br><br>
-			
-			<button 
-				type="button" 
-				onclick="clearFilters()"
-			>
-				Clear Filters
-			</button>
-		</div><br>
-		
-		<div>
-			<h2>All Resources (<span id="resourceCount">{sortedResources.length}</span>)</h2>
-			{sortedResources.length === 0 ? (
-				<p>No resources yet. Be the first to add one!</p>
-			) : (
-				<div id="resourcesList">
-{sortedResources.map((resource) => {
-						const title = (resource.data.title || resource.data.extractedTitle || resource.data.url).toLowerCase();
-						const tags = (resource.data.tags ?? []).join(',').toLowerCase();
-						return (
-						<div data-title={title} data-tags={tags} style="border: 1px solid #ccc; padding: 10px; margin-bottom: 10px;">
-							<h3>
-								<a href={resource.data.url} target="_blank" rel="noopener noreferrer">
-									{resource.data.title || resource.data.extractedTitle || resource.data.url}
-								</a>
-							</h3>
-							{(resource.data.thumbnail || resource.data.extractedThumbnail) && (
-								<img 
-									src={resource.data.thumbnail || resource.data.extractedThumbnail} 
-									alt="" 
-									width="200"
-								/>
-							)}
-						{Array.isArray(resource.data.contributors) && resource.data.contributors.length > 0 && (
-								<p>Contributors: {resource.data.contributors.map(contributor => (
-									<a href={`https://github.com/${contributor}`} target="_blank" rel="noopener noreferrer">
-										<img src={`https://github.com/${contributor}.png`} alt={contributor} width="20" height="20" style="border-radius: 50%; margin-right: 4px;">
-										{contributor}
-									</a>
-								))}</p>
-							)}
-						{Array.isArray(resource.data.tags) && resource.data.tags.length > 0 && (
-								<p>Tags: {resource.data.tags.map(tag => (
-									<a href={`/tags/${tag}`}>{tag}</a>
-								))}</p>
-							)}
-						<p>Added: {resource.data.addedDate ? new Date(resource.data.addedDate).toLocaleDateString() : 'Unknown date'}</p>
-							{resource.body && (
-								<div>
-									<p>{resource.body.slice(0, 200)}...</p>
-								</div>
-							)}
-						</div>
-						);
-					})}
-				</div>
-			)}
-		</div>
-	<script>
-	// Initialize filtering when page loads
-	document.addEventListener('DOMContentLoaded', function() {
-		console.log('Page loaded, initializing filters...');
-		
-		// Store all resource data for filtering
-		const resourceCards = document.querySelectorAll('[data-title]');
-		console.log('Found', resourceCards.length, 'resource cards');
-		
-		// Attach event listeners
-		const searchInput = document.getElementById('searchInput');
-		const tagsSelect = document.getElementById('tagsSelect');
-		
-		if (searchInput) {
-			searchInput.addEventListener('input', filterResources);
-			console.log('Search input listener attached');
-		}
-		
-		if (tagsSelect) {
-			tagsSelect.addEventListener('change', filterResources);
-			console.log('Tags select listener attached');
-		}
-		
-		// Initial filtering
-		filterResources();
-	});
-	
-	function filterResources() {
-		console.log('Filtering resources...');
-		
-		const searchInput = document.getElementById('searchInput');
-		const tagsSelect = document.getElementById('tagsSelect');
-		const resourceCount = document.getElementById('resourceCount');
-		
-		if (!searchInput || !tagsSelect || !resourceCount) {
-			console.error('Missing filter elements');
-			return;
-		}
-		
-		const searchValue = searchInput.value.toLowerCase().trim();
-		const selectedTags = Array.from(tagsSelect.selectedOptions).map(option => option.value.toLowerCase());
-		
-		console.log('Search value:', searchValue);
-		console.log('Selected tags:', selectedTags);
-		
-		const resourceCards = document.querySelectorAll('[data-title]');
-		let visibleCount = 0;
-		
-		resourceCards.forEach((card, index) => {
-			const title = (card.dataset.title || '').toLowerCase();
-			const tags = (card.dataset.tags || '').toLowerCase();
-			const tagsArray = tags.split(',').map(t => t.trim()).filter(t => t);
-			
-			console.log(`Card ${index}: title="${title}", tags=[${tagsArray}]`);
-			
-			// Title filter
-			const matchesTitle = searchValue === '' || title.includes(searchValue);
-			
-			// Tags filter - match ANY selected tag
-			const matchesTags = selectedTags.length === 0 || 
-				selectedTags.some(selectedTag => 
-					tagsArray.some(resourceTag => 
-						resourceTag.includes(selectedTag) || selectedTag.includes(resourceTag)
-					)
-				);
-			
-			console.log(`Card ${index}: matchesTitle=${matchesTitle}, matchesTags=${matchesTags}`);
-			
-			// Show/hide based on filters (AND logic)
-			const shouldShow = matchesTitle && matchesTags;
-			
-			if (shouldShow) {
-				card.style.display = 'block';
-				visibleCount++;
-			} else {
-				card.style.display = 'none';
-			}
-		});
-		
-		// Update count
-		resourceCount.textContent = visibleCount;
-		console.log('Visible count:', visibleCount);
-		
-		// Handle no results message
-		const resourcesList = document.getElementById('resourcesList');
-		let noResultsDiv = resourcesList.querySelector('.no-results');
-		
-		if (visibleCount === 0) {
-			if (!noResultsDiv) {
-				noResultsDiv = document.createElement('div');
-				noResultsDiv.className = 'no-results';
-				noResultsDiv.innerHTML = '<p><strong>No resources found</strong><br>Try adjusting your search or tag selection.</p>';
-				resourcesList.appendChild(noResultsDiv);
-			}
-		} else if (noResultsDiv) {
-			noResultsDiv.remove();
-		}
-	}
-	
-	function clearFilters() {
-		console.log('Clearing filters...');
-		const searchInput = document.getElementById('searchInput');
-		const tagsSelect = document.getElementById('tagsSelect');
-		
-		if (searchInput) searchInput.value = '';
-		if (tagsSelect) tagsSelect.selectedIndex = -1;
-		
-		filterResources();
-	}
-</script>
-</body>
-</html>
+<BaseLayout title="Resource Hub | Binary Brains">
+  <h1>Resource Hub</h1>
+  <p>Learning resources shared by the community</p>
+
+  <div>
+    <label for="searchInput">Search by title:</label><br />
+    <input
+      type="text"
+      id="searchInput"
+      placeholder="Type to search resources..."
+      style="width: 300px; margin-bottom: 10px"
+    /><br /><br />
+
+    <label for="tagsSelect"
+    >Filter by tags (hold Ctrl/Cmd to select multiple):</label><br />
+    <select id="tagsSelect" multiple style="width: 300px; height: 100px">
+      {allTags.map((tag) => <option value={tag}>{tag}</option>)}
+    </select><br /><br />
+
+    <button type="button" onclick="clearFilters()">Clear Filters</button>
+  </div><br />
+
+  <div>
+    <h2>
+      All Resources (<span id="resourceCount">{sortedResources.length}</span>)
+    </h2>
+    {sortedResources.length === 0 ? (
+      <p>No resources yet. Be the first to add one!</p>
+    ) : (
+       <div id="resourcesList">
+         {sortedResources.map((resource) => {
+           const title = (
+             resource.data.title ||
+             resource.data.extractedTitle ||
+             resource.data.url
+           ).toLowerCase();
+           const tags = (resource.data.tags ?? [])
+             .join(",")
+             .toLowerCase();
+           return (
+             <div
+               data-title={title}
+               data-tags={tags}
+               style="border: 1px solid #ccc; padding: 10px; margin-bottom: 10px"
+             >
+               <h3>
+                 <a
+                   href={resource.data.url}
+                   target="_blank"
+                   rel="noopener noreferrer"
+                 >
+                   {resource.data.title ||
+                     resource.data.extractedTitle ||
+                     resource.data.url}
+                 </a>
+               </h3>
+               {(resource.data.thumbnail ||
+                 resource.data.extractedThumbnail) && (
+                   <img
+                     src={resource.data.thumbnail ||
+                     resource.data.extractedThumbnail}
+                     alt=""
+                     width="200"
+                   />
+                 )}
+               {Array.isArray(resource.data.contributors) &&
+                 resource.data.contributors.length > 0 && (
+                   <p>
+                     Contributors:{" "}
+                     {resource.data.contributors.map(
+                       (contributor) => (
+                         <a
+                           href={`https://github.com/${contributor}`}
+                           target="_blank"
+                           rel="noopener noreferrer"
+                         >
+                           <img
+                             src={`https://github.com/${contributor}.png`}
+                             alt={contributor}
+                             width="20"
+                             height="20"
+                             style="border-radius: 50%; margin-right: 4px"
+                           />
+                           {contributor}
+                         </a>
+                       ),
+                     )}
+                   </p>
+                 )}
+               {Array.isArray(resource.data.tags) &&
+                 resource.data.tags.length > 0 && (
+                   <p>
+                     Tags:{" "}
+                     {resource.data.tags.map((tag) => (
+                       <a href={`/tags/${tag}`}>
+                         {tag}
+                       </a>
+                     ))}
+                   </p>
+                 )}
+               <p>
+                 Added:{" "}
+                 {resource.data.addedDate
+                   ? new Date(
+                     resource.data.addedDate,
+                   ).toLocaleDateString()
+                   : "Unknown date"}
+               </p>
+               {resource.body && (
+                 <div>
+                   <p>{resource.body.slice(0, 200)}...</p>
+                 </div>
+               )}
+             </div>
+           );
+         })}
+       </div>
+     )}
+  </div>
+  <script>
+    // Initialize filtering when page loads
+    document.addEventListener("DOMContentLoaded", function () {
+      console.log("Page loaded, initializing filters...");
+
+      // Store all resource data for filtering
+      const resourceCards = document.querySelectorAll("[data-title]");
+      console.log("Found", resourceCards.length, "resource cards");
+
+      // Attach event listeners
+      const searchInput = document.getElementById("searchInput");
+      const tagsSelect = document.getElementById("tagsSelect");
+
+      if (searchInput) {
+        searchInput.addEventListener("input", filterResources);
+        console.log("Search input listener attached");
+      }
+
+      if (tagsSelect) {
+        tagsSelect.addEventListener("change", filterResources);
+        console.log("Tags select listener attached");
+      }
+
+      // Initial filtering
+      filterResources();
+    });
+
+    function filterResources() {
+      console.log("Filtering resources...");
+
+      const searchInput = document.getElementById("searchInput");
+      const tagsSelect = document.getElementById("tagsSelect");
+      const resourceCount = document.getElementById("resourceCount");
+
+      if (!searchInput || !tagsSelect || !resourceCount) {
+        console.error("Missing filter elements");
+        return;
+      }
+
+      const searchValue = searchInput.value.toLowerCase().trim();
+      const selectedTags = Array.from(tagsSelect.selectedOptions).map(
+        (option) => option.value.toLowerCase(),
+      );
+
+      console.log("Search value:", searchValue);
+      console.log("Selected tags:", selectedTags);
+
+      const resourceCards = document.querySelectorAll("[data-title]");
+      let visibleCount = 0;
+
+      resourceCards.forEach((card, index) => {
+        const title = (card.dataset.title || "").toLowerCase();
+        const tags = (card.dataset.tags || "").toLowerCase();
+        const tagsArray = tags
+          .split(",")
+          .map((t) => t.trim())
+          .filter((t) => t);
+
+        console.log(
+          `Card ${index}: title="${title}", tags=[${tagsArray}]`,
+        );
+
+        // Title filter
+        const matchesTitle = searchValue === "" || title.includes(searchValue);
+
+        // Tags filter - match ANY selected tag
+        const matchesTags = selectedTags.length === 0 ||
+          selectedTags.some((selectedTag) =>
+            tagsArray.some(
+              (resourceTag) =>
+                resourceTag.includes(selectedTag) ||
+                selectedTag.includes(resourceTag),
+            )
+          );
+
+        console.log(
+          `Card ${index}: matchesTitle=${matchesTitle}, matchesTags=${matchesTags}`,
+        );
+
+        // Show/hide based on filters (AND logic)
+        const shouldShow = matchesTitle && matchesTags;
+
+        if (shouldShow) {
+          card.style.display = "block";
+          visibleCount++;
+        } else {
+          card.style.display = "none";
+        }
+      });
+
+      // Update count
+      resourceCount.textContent = visibleCount;
+      console.log("Visible count:", visibleCount);
+
+      // Handle no results message
+      const resourcesList = document.getElementById("resourcesList");
+      let noResultsDiv = resourcesList.querySelector(".no-results");
+
+      if (visibleCount === 0) {
+        if (!noResultsDiv) {
+          noResultsDiv = document.createElement("div");
+          noResultsDiv.className = "no-results";
+          noResultsDiv.innerHTML =
+            "<p><strong>No resources found</strong><br>Try adjusting your search or tag selection.</p>";
+          resourcesList.appendChild(noResultsDiv);
+        }
+      } else if (noResultsDiv) {
+        noResultsDiv.remove();
+      }
+    }
+
+    function clearFilters() {
+      console.log("Clearing filters...");
+      const searchInput = document.getElementById("searchInput");
+      const tagsSelect = document.getElementById("tagsSelect");
+
+      if (searchInput) searchInput.value = "";
+      if (tagsSelect) tagsSelect.selectedIndex = -1;
+
+      filterResources();
+    }
+  </script>
+</BaseLayout>
