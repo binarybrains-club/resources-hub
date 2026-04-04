@@ -1,41 +1,38 @@
 ---
-import { getCollection } from "astro:content";
+import { getCollection, type CollectionEntry } from "astro:content";
 import BaseLayout from "@/layouts/BaseLayout.astro";
 
-const allResources = await getCollection("resources");
+const allResources: CollectionEntry<"resources">[] = await getCollection("resources");
 const sortedResources = allResources.sort(
   (a, b) =>
     new Date(b.data.addedDate).getTime() -
     new Date(a.data.addedDate).getTime(),
 );
 
-// Get all unique tags for filtering
 const allTags = [
   ...new Set(allResources.flatMap((resource) => resource.data.tags ?? [])),
 ].sort();
 ---
-
 <BaseLayout title="Resource Hub">
   <h1>Resource Hub</h1>
-  <p>Learning resources shared by the community</p>
 
   <div>
-    <label for="searchInput">Search by title:</label><br />
+    <label for="searchInput">Search by title:</label>
     <input
       type="text"
       id="searchInput"
       placeholder="Type to search resources..."
       style="width: 300px; margin-bottom: 10px"
-    /><br /><br />
+    />
 
     <label for="tagsSelect"
-    >Filter by tags (hold Ctrl/Cmd to select multiple):</label><br />
+    >Filter by tags (hold Ctrl/Cmd to select multiple):</label>
     <select id="tagsSelect" multiple style="width: 300px; height: 100px">
       {allTags.map((tag) => <option value={tag}>{tag}</option>)}
-    </select><br /><br />
+    </select>
 
     <button type="button" onclick="clearFilters()">Clear Filters</button>
-  </div><br />
+  </div>
 
   <div>
     <h2>

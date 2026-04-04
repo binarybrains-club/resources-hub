@@ -1,11 +1,12 @@
 import { extractMetadata } from "@/utils/metadata.ts";
+import type { APIContext } from "astro";
 
 /**
  * API endpoint for extracting metadata from a URL.
  * Accepts POST request with a URL and returns extracted title and thumbnail.
  * @returns JSON response with metadata or error message
  */
-export async function POST({ request }: { request: Request }) {
+export async function POST({ request }: APIContext) {
   try {
     const { url } = await request.json();
 
