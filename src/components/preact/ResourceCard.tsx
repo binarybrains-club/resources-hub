@@ -32,9 +32,11 @@ export default function ResourceCard({ resource }: Props) {
 
       {resource.data.tags.length > 0 && (
         <p>
-          Tags:{' '}
-          {resource.data.tags.map((tag: string) => (
-            <a href={`/resources-hub/tags/${encodeURIComponent(tag)}`} key={tag}>
+          Tags: {resource.data.tags.map((tag: string) => (
+            <a
+              href={`/resources-hub/tags/${encodeURIComponent(tag)}`}
+              key={tag}
+            >
               {tag}
             </a>
           ))}
