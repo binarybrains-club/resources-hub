@@ -1,0 +1,41 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import ResourceCard from '@/components/preact/ResourceCard';
+
+export async function getStaticPaths() {
+  const allResources = await getCollection('resources');
+  const allTags = [
+    ...new Set(allResources.flatMap((resource) => resource.data.tags)),
+  ];
+
+  return allTags.map((tag) => ({
+    params: { tag },
+    props: {
+      tag,
+      resources: allResources.filter((resource) =>
+        resource.data.tags.includes(tag)
+      ).sort((a, b) =>
+        new Date(b.data.addedDate).getTime() -
+        new Date(a.data.addedDate).getTime()
+      ),
+    },
+  }));
+}
+
+const { tag, resources } = Astro.props;
+---
+<BaseLayout title={`Resource Hub - ${tag}`}>
+  <nav>
+    <a href="/">← Back to all resources</a>
+  </nav>
+
+  <h1>Resources tagged: {tag}</h1>
+  <p>Found {resources.length} resources</p>
+
+  {resources.length === 0 ? <p>No resources found with this tag.</p> : (
+     <div>
+       {resources.map((resource) => <ResourceCard {resource} />)}
+     </div>
+   )}
+</BaseLayout>

@@ -1,16 +1,30 @@
 ---
+import { type CollectionEntry, getCollection } from 'astro:content';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import ResourceFilterSearch from '@/components/preact/ResourceFilterSearch.tsx';
 
+const allResources: CollectionEntry<'resources'>[] = await getCollection(
+  'resources',
+);
+
+const sortedResources = allResources.sort(
+  (a, b) =>
+    new Date(b.data.addedDate).getTime() -
+    new Date(a.data.addedDate).getTime(),
+);
+
+const allTags = [
+  ...new Set(allResources.flatMap((resource) => resource.data.tags ?? [])),
+].toSorted();
 ---
+<BaseLayout title="Resource Hub">
+  <h1>Resource Hub</h1>
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+  <div>
+    <ResourceFilterSearch
+      client:idle
+      resources={sortedResources}
+      tags={allTags}
+    />
+  </div>
+</BaseLayout>
