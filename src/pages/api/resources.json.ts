@@ -3,7 +3,6 @@ import type { APIContext } from "astro";
 import { z } from "astro/zod";
 import { type ApiResponse } from "@/schema/api-response.ts";
 import { err, ok, ResultAsync } from "neverthrow";
-import { StatusCodes } from "@egamagz/statusx";
 
 const ResourceFilterSchema = z.object({
   tags: z.string().array().optional(),
@@ -31,7 +30,7 @@ export async function GET({ url }: APIContext) {
           message: filterResult.error,
         } satisfies ApiResponse,
       ),
-      { status: StatusCodes.BadRequest },
+      { status: 400 },
     );
   }
 
@@ -51,7 +50,7 @@ export async function GET({ url }: APIContext) {
           message: "Failed to fetch resources",
         } satisfies ApiResponse,
       ),
-      { status: StatusCodes.InternalServerError },
+      { status: 500 },
     );
   }
 
@@ -80,6 +79,6 @@ export async function GET({ url }: APIContext) {
         data: filteredResources,
       } satisfies ApiResponse<CollectionEntry<"resources">[]>,
     ),
-    { status: StatusCodes.OK },
+    { status: 200 },
   );
 }

@@ -41,7 +41,7 @@ export default function ResourceCard({ resource }: Props) {
         </p>
       )}
 
-      <p>Added on: {resource.data.addedDate.toLocaleDateString()}</p>
+      <p>Added on: {new Date(resource.data.addedDate).toLocaleDateString()}</p>
     </div>
   );
 }

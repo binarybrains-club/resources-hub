@@ -1,7 +1,5 @@
 {
-  "allowScripts": ["npm:esbuild@0.25.12", "npm:sharp@0.34.5"],
-  "unstable": ["fmt-component"],
   "imports": {
-    "@egamagz/statusx": "jsr:@egamagz/statusx@^2026.3.24"
+    "@binarybrains/statusx": "jsr:@binarybrains/statusx@^2026.3.26"
   }
 }

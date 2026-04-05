@@ -1,7 +1,8 @@
 {
   "version": "5",
   "specifiers": {
-    "jsr:@egamagz/statusx@^2026.3.24": "2026.3.24",
+    "jsr:@binarybrains/statusx@*": "2026.3.26",
+    "jsr:@binarybrains/statusx@^2026.3.26": "2026.3.26",
     "npm:@astrojs/preact@^5.1.1": "5.1.1_preact@10.29.1_@babel+core@7.29.0",
     "npm:@preact/signals@^2.9.0": "2.9.0_preact@10.29.1",
     "npm:astro@6.1.3": "6.1.3",
@@ -9,8 +10,8 @@
     "npm:preact@^10.29.1": "10.29.1"
   },
   "jsr": {
-    "@egamagz/statusx@2026.3.24": {
-      "integrity": "a17803d1695c289ac2abc77e3f9b4f691f15546cf8109f117412cd7715c7af39"
+    "@binarybrains/statusx@2026.3.26": {
+      "integrity": "468bf349d67563b0f5e6c8a39c4e40b20e512908c9f5467ebc0d53fe20eb29e4"
     }
   },
   "npm": {
@@ -2462,7 +2463,7 @@
   },
   "workspace": {
     "dependencies": [
-      "jsr:@egamagz/statusx@^2026.3.24"
+      "jsr:@binarybrains/statusx@^2026.3.26"
     ],
     "packageJson": {
       "dependencies": [
