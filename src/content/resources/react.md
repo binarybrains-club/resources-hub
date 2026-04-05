@@ -1,7 +1,7 @@
 ---
 url: https://react.dev/
-tags: ["web-development", "javascript", "library", "frontend"]
-contributors: ["notgamaliel", "contributor2"]
+tags: ['web-development', 'javascript', 'library', 'frontend']
+contributors: ['notgamaliel', 'contributor2']
 addedDate: 2026-01-15
 ---
 

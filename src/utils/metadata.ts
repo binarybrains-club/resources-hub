@@ -10,7 +10,7 @@ export async function extractMetadata(url: string): Promise<{
   try {
     const response = await fetch(url, {
       headers: {
-        "User-Agent": "Mozilla/5.0 (compatible; ResourceHub/1.0)",
+        'User-Agent': 'Mozilla/5.0 (compatible; ResourceHub/1.0)',
       },
     });
 

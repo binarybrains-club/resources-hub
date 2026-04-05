@@ -1,14 +1,14 @@
-import type { CollectionEntry } from "astro:content";
+import type { CollectionEntry } from 'astro:content';
 
 interface Props {
-  resource: CollectionEntry<"resources">;
+  resource: CollectionEntry<'resources'>;
 }
 
 export default function ResourceCard({ resource }: Props) {
   return (
     <div>
       <h3>
-        <a href={resource.data.url} target="_blank" rel="noopener noreferrer">
+        <a href={resource.data.url} target='_blank' rel='noopener noreferrer'>
           {resource.data.title || resource.data.url}
         </a>
       </h3>
@@ -17,8 +17,8 @@ export default function ResourceCard({ resource }: Props) {
           Contributor:
           <a
             href={`https://github.com/${resource.data.contributor}`}
-            target="_blank"
-            rel="noopener noreferrer"
+            target='_blank'
+            rel='noopener noreferrer'
           >
             <img
               src={`https://github.com/${resource.data.contributor}.png`}
@@ -32,7 +32,7 @@ export default function ResourceCard({ resource }: Props) {
 
       {resource.data.tags.length > 0 && (
         <p>
-          Tags:{" "}
+          Tags:{' '}
           {resource.data.tags.map((tag: string) => (
             <a href={`/tags/${encodeURIComponent(tag)}`} key={tag}>
               {tag}

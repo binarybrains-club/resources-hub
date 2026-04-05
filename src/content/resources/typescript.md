@@ -1,8 +1,8 @@
 ---
 url: https://www.typescriptlang.org/
 title: TypeScript Documentation
-tags: ["programming", "javascript", "typescript"]
-contributors: ["notgamaliel"]
+tags: ['programming', 'javascript', 'typescript']
+contributors: ['notgamaliel']
 addedDate: 2026-01-16
 ---
 

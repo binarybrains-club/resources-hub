@@ -1,7 +1,7 @@
 type ApiError =
-  | "invalid_request_parameters"
-  | "not_found"
-  | "internal_server_error";
+  | 'invalid_request_parameters'
+  | 'not_found'
+  | 'internal_server_error';
 
 type SuccesApiReponse<T> = {
   message: string;

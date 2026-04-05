@@ -1,7 +1,7 @@
 ---
 url: https://astro.build/
-tags: ["web-development", "framework", "javascript"]
-contributors: ["notgamaliel"]
+tags: ['web-development', 'framework', 'javascript']
+contributors: ['notgamaliel']
 addedDate: 2026-01-16
 ---
 

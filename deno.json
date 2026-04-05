@@ -1,5 +1,13 @@
 {
-  "imports": {
-    "@binarybrains/statusx": "jsr:@binarybrains/statusx@^2026.3.26"
+  "allowScripts": ["npm:esbuild@0.25.12", "npm:sharp@0.34.5"],
+  "unstable": ["fmt-component"],
+  "fmt": {
+    "singleQuote": true,
+    "trailingCommas": "onlyMultiLine"
+  },
+  "lint": {
+    "rules": {
+      "tags": ["recommended", "jsx", "react"]
+    }
   }
 }

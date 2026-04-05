@@ -1,16 +1,16 @@
-import type { CollectionEntry } from "astro:content";
-import { useRef } from "preact/hooks";
-import { useSignal } from "@preact/signals";
+import type { CollectionEntry } from 'astro:content';
+import { useRef } from 'preact/hooks';
+import { useSignal } from '@preact/signals';
 
-import ResourceCard from "@/components/preact/ResourceCard.tsx";
+import ResourceCard from '@/components/preact/ResourceCard.tsx';
 
 interface Props {
-  resources: CollectionEntry<"resources">[];
+  resources: CollectionEntry<'resources'>[];
   tags: string[];
 }
 
 export default function ResourceFilterSearch(props: Props) {
-  const currentResources = useSignal<CollectionEntry<"resources">[]>(
+  const currentResources = useSignal<CollectionEntry<'resources'>[]>(
     props.resources,
   );
 
@@ -19,7 +19,7 @@ export default function ResourceFilterSearch(props: Props) {
 
   const handleClearFilters = (_event: Event) => {
     if (searchInputRef.current) {
-      searchInputRef.current.value = "";
+      searchInputRef.current.value = '';
     }
 
     if (tagsSelectRef.current) {
@@ -30,7 +30,7 @@ export default function ResourceFilterSearch(props: Props) {
   };
 
   const handlerFilterSearch = () => {
-    const searchTerm = searchInputRef.current?.value.toLowerCase() || "";
+    const searchTerm = searchInputRef.current?.value.toLowerCase() || '';
     const selectedTags = Array.from(
       tagsSelectRef.current?.selectedOptions || [],
     ).map((option) => option.value);
@@ -50,21 +50,21 @@ export default function ResourceFilterSearch(props: Props) {
   return (
     <>
       <div>
-        <label for="searchInput">
+        <label for='searchInput'>
           Buscar por titulo:
         </label>
         <input
           ref={searchInputRef}
-          id="searchInput"
-          type="text"
-          placeholder="Escribe el titulo del recurso"
+          id='searchInput'
+          type='text'
+          placeholder='Escribe el titulo del recurso'
           onInput={handlerFilterSearch}
         />
 
         <label>
           Filtrar por etiquetas (mantén Ctrl/Cmd para seleccionar varias):
           <select
-            id="tagsSelect"
+            id='tagsSelect'
             multiple
             ref={tagsSelectRef}
             onChange={handlerFilterSearch}
@@ -76,7 +76,7 @@ export default function ResourceFilterSearch(props: Props) {
             ))}
           </select>
         </label>
-        <button type="button" onClick={handleClearFilters}>
+        <button type='button' onClick={handleClearFilters}>
           Limpiar filtros
         </button>
       </div>

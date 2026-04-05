@@ -1,8 +1,8 @@
 ---
 url: https://www.rust-lang.org/
 title: Rust Programming Language
-tags: ["programming", "systems", "rust", "memory-safety"]
-contributors: ["rust-lang"]
+tags: ['programming', 'systems', 'rust', 'memory-safety']
+contributors: ['rust-lang']
 addedDate: 2026-01-16
 ---
 
