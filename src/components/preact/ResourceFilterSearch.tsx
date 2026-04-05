@@ -1,6 +1,8 @@
 import type { CollectionEntry } from "astro:content";
 import { useRef } from "preact/hooks";
 
+import ResourceCard from "@/components/preact/ResourceCard.tsx";
+
 interface Props {
   resources: CollectionEntry<"resources">[];
   tags: string[];
@@ -45,8 +47,15 @@ export default function ResourceFilterSearch(props: Props) {
             ))}
           </select>
         </label>
-        <button type="button">
+        <button type="button" onClick={handleClearFilters}>
+          Limpiar filtros
         </button>
+      </div>
+
+      <div>
+        {props.resources.map((resource) => (
+          <ResourceCard key={resource.id} resource={resource} />
+        ))}
       </div>
     </>
   );

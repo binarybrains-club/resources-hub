@@ -2,7 +2,7 @@ import { type CollectionEntry, getCollection } from "astro:content";
 import type { APIContext } from "astro";
 import { z } from "astro/zod";
 import { type ApiResponse } from "@/schema/api-response.ts";
-import { ResultAsync, ok, err } from "neverthrow";
+import { err, ok, ResultAsync } from "neverthrow";
 import { StatusCodes } from "@egamagz/statusx";
 
 const ResourceFilterSchema = z.object({
@@ -11,8 +11,8 @@ const ResourceFilterSchema = z.object({
 });
 
 export async function GET({ url }: APIContext) {
-  const tags = url.searchParams.getAll('tags');
-  const title = url.searchParams.get('title');
+  const tags = url.searchParams.getAll("tags");
+  const title = url.searchParams.get("title");
   const filterData = {
     tags: tags.length > 0 ? tags : undefined,
     title: title || undefined,
@@ -40,7 +40,7 @@ export async function GET({ url }: APIContext) {
     (error) => {
       console.error("Error fetching resources:", error);
       return "internal_server_error";
-    }
+    },
   );
 
   if (resourcesResult.isErr()) {
@@ -57,14 +57,17 @@ export async function GET({ url }: APIContext) {
 
   const resources = resourcesResult.value as CollectionEntry<"resources">[];
 
-
   const filteredResources = resources.filter((resource) => {
     const matchesTags = filterResult.value.tags
-      ? filterResult.value.tags.some((tag: string) => resource.data.tags.includes(tag))
+      ? filterResult.value.tags.some((tag: string) =>
+        resource.data.tags.includes(tag)
+      )
       : true;
 
     const matchesTitle = filterResult.value.title
-      ? resource.data.title.toLowerCase().includes(filterResult.value.title.toLowerCase())
+      ? resource.data.title.toLowerCase().includes(
+        filterResult.value.title.toLowerCase(),
+      )
       : true;
 
     return matchesTags && matchesTitle;

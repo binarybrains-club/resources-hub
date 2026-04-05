@@ -11,12 +11,9 @@ const resources = defineCollection({
   schema: z.object({
     title: z.string().optional(),
     url: z.url(),
-    thumbnail: z.url().optional(),
-    contributors: z.array(z.string()).default([]),
+    contributor: z.string().optional(),
     addedDate: z.date(),
     tags: z.array(z.string()).default([]),
-    extractedTitle: z.string().optional(),
-    extractedThumbnail: z.url().optional(),
   }),
 });
 
