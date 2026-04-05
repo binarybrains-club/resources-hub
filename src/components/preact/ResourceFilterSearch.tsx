@@ -29,32 +29,22 @@ export default function ResourceFilterSearch(props: Props) {
     currentResources.value = props.resources;
   };
 
-  const handlerFilterSearch = async () => {
-    const url = new URL("/api/resources.json", globalThis.location.origin);
-    if (searchInputRef.current?.value) {
-      url.searchParams.append("title", searchInputRef.current.value.trim());
-    }
+  const handlerFilterSearch = () => {
+    const searchTerm = searchInputRef.current?.value.toLowerCase() || "";
+    const selectedTags = Array.from(
+      tagsSelectRef.current?.selectedOptions || [],
+    ).map((option) => option.value);
 
-    if (tagsSelectRef.current) {
-      const selectedTags = Array.from(tagsSelectRef.current.selectedOptions)
-        .map(
-          (option) => option.value,
-        );
-      selectedTags.forEach((tag) => url.searchParams.append("tags", tag));
-    }
+    currentResources.value = props.resources.filter((resource) => {
+      const matchesTitle = resource.data.title
+        ? resource.data.title.toLowerCase().includes(searchTerm)
+        : false;
 
-    console.log("Fetching filtered resources with URL:", url.toString());
+      const matchesTags = selectedTags.length === 0 ||
+        selectedTags.every((tag) => resource.data.tags.includes(tag));
 
-    const response = await fetch(url, {
-      method: "GET",
+      return matchesTitle && matchesTags;
     });
-    const data = await response.json();
-
-    if (response.ok) {
-      currentResources.value = data.data;
-    } else {
-      console.error("Error fetching filtered resources:", data.message);
-    }
   };
 
   return (
