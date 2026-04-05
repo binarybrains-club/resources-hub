@@ -2,7 +2,7 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: [main]
+    branches: [master]
   workflow_dispatch:
 
 permissions:
@@ -11,7 +11,14 @@ permissions:
   id-token: write
 
 jobs:
+  check-linting:
+    name: 'Check linting and formatting'
+    permissions:
+      contents: write
+    uses: ./.github/workflows/lint.yml
+
   build:
+    needs: check-linting
     runs-on: ubuntu-latest
     steps:
       - name: Checkout your repository using git
@@ -19,15 +26,8 @@ jobs:
       - name: Install, build, and upload your site
         uses: withastro/action@v5
 
-  check-linting:
-    name: 'Check linting and formatting'
-    needs: build
-    permissions:
-      contents: write
-    uses: ./.github/workflows/lint.yml
-
   deploy:
-    needs: check-linting
+    needs: build
     runs-on: ubuntu-latest
     environment:
       name: github-pages
