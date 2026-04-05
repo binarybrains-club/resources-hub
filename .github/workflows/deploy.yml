@@ -22,6 +22,8 @@ jobs:
   check-linting:
     name: 'Check linting and formatting'
     needs: build
+    permissions:
+      contents: write
     uses: ./.github/workflows/lint.yml
 
   deploy:
