@@ -56,8 +56,8 @@ const { allResources, tag, filteredResources, sortedResources } = Astro.props;
                width="200"
              />
            )}
-           {resource.data.contributors.length > 0 && (
-             <p>Contributors: {resource.data.contributors.join(", ")}</p>
+           {resource.data.contributor > 0 && (
+             <p>Contributors: {resource.data.contributor.join(", ")}</p>
            )}
            {resource.data.tags.length > 0 && (
              <p>
