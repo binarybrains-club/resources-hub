@@ -1,10 +1,17 @@
 {
   "version": "5",
   "specifiers": {
+    "jsr:@egamagz/statusx@^2026.3.24": "2026.3.24",
     "npm:@astrojs/preact@^5.1.1": "5.1.1_preact@10.29.1_@babel+core@7.29.0",
     "npm:@preact/signals@^2.9.0": "2.9.0_preact@10.29.1",
     "npm:astro@6.1.3": "6.1.3",
+    "npm:neverthrow@^8.2.0": "8.2.0",
     "npm:preact@^10.29.1": "10.29.1"
+  },
+  "jsr": {
+    "@egamagz/statusx@2026.3.24": {
+      "integrity": "a17803d1695c289ac2abc77e3f9b4f691f15546cf8109f117412cd7715c7af39"
+    }
   },
   "npm": {
     "@astrojs/compiler@3.0.1": {
@@ -1823,6 +1830,12 @@
     "neotraverse@0.6.18": {
       "integrity": "sha512-Z4SmBUweYa09+o6pG+eASabEpP6QkQ70yHj351pQoEXIs8uHbaU2DWVmzBANKgflPa47A50PtB2+NgRpQvr7vA=="
     },
+    "neverthrow@8.2.0": {
+      "integrity": "sha512-kOCT/1MCPAxY5iUV3wytNFUMUolzuwd/VF/1KCx7kf6CutrOsTie+84zTGTpgQycjvfLdBBdvBvFLqFD2c0wkQ==",
+      "optionalDependencies": [
+        "@rollup/rollup-linux-x64-gnu"
+      ]
+    },
     "nlcst-to-string@4.0.0": {
       "integrity": "sha512-YKLBCcUYKAg0FNlOBT6aI91qFmSiFKiluk655WzPF+DDMA02qIyy8uiRqI8QXtcFpEvll12LpL5MXqEmAZ+dcA==",
       "dependencies": [
@@ -2448,11 +2461,15 @@
     }
   },
   "workspace": {
+    "dependencies": [
+      "jsr:@egamagz/statusx@^2026.3.24"
+    ],
     "packageJson": {
       "dependencies": [
         "npm:@astrojs/preact@^5.1.1",
         "npm:@preact/signals@^2.9.0",
         "npm:astro@6.1.3",
+        "npm:neverthrow@^8.2.0",
         "npm:preact@^10.29.1"
       ]
     }

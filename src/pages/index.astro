@@ -1,6 +1,7 @@
 ---
 import { type CollectionEntry, getCollection } from "astro:content";
 import BaseLayout from "@/layouts/BaseLayout.astro";
+import ResourceFilterSearch from "@/components/preact/ResourceFilterSearch.tsx";
 
 const allResources: CollectionEntry<"resources">[] = await getCollection(
   "resources",
@@ -20,21 +21,7 @@ const allTags = [
   <h1>Resource Hub</h1>
 
   <div>
-    <label for="searchInput">Search by title:</label>
-    <input
-      type="text"
-      id="searchInput"
-      placeholder="Type to search resources..."
-      style="width: 300px; margin-bottom: 10px"
-    />
-
-    <label for="tagsSelect"
-    >Filter by tags (hold Ctrl/Cmd to select multiple):</label>
-    <select id="tagsSelect" multiple style="width: 300px; height: 100px">
-      {allTags.map((tag) => <option value={tag}>{tag}</option>)}
-    </select>
-
-    <button type="button" onclick="clearFilters()">Clear Filters</button>
+    <ResourceFilterSearch client:idle resources={sortedResources} tags={allTags} />
   </div>
 
   <div>
