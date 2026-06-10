@@ -1,6 +1,6 @@
 import type { CollectionEntry } from 'astro:content';
-import { useRef } from 'preact/hooks';
-import { useSignal } from '@preact/signals';
+import { useRef } from 'react';
+import { useSignal } from '@preact/signals-react';
 
 import ResourceCard from '@/components/preact/ResourceCard.tsx';
 

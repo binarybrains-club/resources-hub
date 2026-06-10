@@ -1,5 +1,6 @@
 import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '../../lib/utils.ts';
+import React from 'react';
 
 type SlotProps = React.HTMLAttributes<HTMLElement> & {
   children?: React.ReactNode;
