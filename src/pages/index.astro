@@ -2,6 +2,7 @@
 import { type CollectionEntry, getCollection } from 'astro:content';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import ResourceFilterSearch from '@/components/preact/ResourceFilterSearch.tsx';
+import { Button } from "../components/ui/button.tsx";
 
 const allResources: CollectionEntry<'resources'>[] = await getCollection(
   'resources',
@@ -19,7 +20,9 @@ const allTags = [
 ---
 <BaseLayout title="Resource Hub">
   <h1>Resource Hub</h1>
-
+  <Button>
+    asd
+  </Button>
   <div>
     <ResourceFilterSearch
       client:idle
