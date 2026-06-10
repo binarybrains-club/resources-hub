@@ -1,6 +1,6 @@
 import type { CollectionEntry } from 'astro:content';
-import { useRef } from 'preact/hooks';
-import { useSignal } from '@preact/signals';
+import { useRef } from 'react';
+import { useSignal } from '@preact/signals-react';
 
 import ResourceCard from '@/components/preact/ResourceCard.tsx';
 
@@ -48,8 +48,8 @@ export default function ResourceFilterSearch(props: Props) {
   };
 
   return (
-    <>
-      <div>
+    <div class='grid grid-cols-[minmax(min-content,24rem)_1fr] gap-4'>
+      <div class='flex flex-col'>
         <label for='searchInput'>
           Buscar por titulo:
         </label>
@@ -61,7 +61,7 @@ export default function ResourceFilterSearch(props: Props) {
           onInput={handlerFilterSearch}
         />
 
-        <label>
+        <label class='flex flex-col'>
           Filtrar por etiquetas (mantén Ctrl/Cmd para seleccionar varias):
           <select
             id='tagsSelect'
@@ -81,11 +81,20 @@ export default function ResourceFilterSearch(props: Props) {
         </button>
       </div>
 
-      <div>
-        {currentResources.value.map((resource) => (
-          <ResourceCard key={resource.id} resource={resource} />
-        ))}
-      </div>
-    </>
+      {currentResources.value.length > 0
+        ? (
+          <div class='columns-2 lg:columns-3 gap-4 p-4'>
+            {currentResources.value.map((resource) => (
+              <ResourceCard key={resource.id} resource={resource} />
+            ))}
+          </div>
+        )
+        : (
+          <div>
+            ASD
+          </div>
+        )}
+      {}
+    </div>
   );
 }
